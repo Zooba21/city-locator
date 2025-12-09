@@ -1,0 +1,81 @@
+<div class="card-header">
+  <h1>Rechercher une région</h1>
+</div>
+
+<div class="card-body">
+  <p>Choisissez une région pour lister ses départements</p>
+  <div class="auto-complete" data-test-id="region-autocomplete-container">
+    <div class="auto-complete__auto-complete-input-container">
+      <input class="auto-complete__auto-complete-input" name="region" type="text" (focus)="displayRegionList.set(true)"
+        data-test-id="region-autocomplete-input" (input)="displayRegionList.set(true)"
+        placeholder="Tapez le nom d'une région" [formControl]="regionName" role="combobox"
+        [attr.aria-expanded]="displayRegionList()" aria-controls="region-list"
+        [attr.aria-activedescendant]="focusRegionIndex() !== null ? 'region-' + focusRegionIndex() : null"
+        aria-autocomplete="list" aria-label="Recherche de région avec auto-complétion" />
+      @if(regionName && regionName.value !== '') {
+      <button class="auto-complete__auto-complete-input-icon material-icons" type="button"
+        (click)="clearRegionInput(); $event.stopPropagation()" aria-label="Effacer la recherche">close</button>
+      }
+    </div>
+
+    @if($regionsResource.error()) {
+    <div class="error-container" [class.active]="displayRegionList()">
+      <p>Erreur lors du chargement des régions</p>
+      <button type="button" (click)="retryLoadingRegions()" class="retry-button">
+        Réessayer
+      </button>
+    </div>
+    } @else if(autoCompleteRegions().length > 0) {
+    <ul id="region-list" class="auto-complete__auto-complete-list" [class.active]="displayRegionList()"
+      data-test-id="region-autocomplete-list-container" role="listbox" aria-label="Liste des régions">
+      @for(region of autoCompleteRegions(); let idx = $index; track region.code) {
+      <li [id]="'region-' + idx" class="auto-complete__auto-complete-item" [class.active]="idx === focusRegionIndex()"
+        (click)="setRegion(region); $event.stopPropagation()"
+        (keydown.enter)="setRegion(region); $event.stopPropagation()" [tabindex]="0" role="option"
+        [attr.aria-selected]="idx === focusRegionIndex()">
+        <span>{{ region.nom }}</span>
+        <span>({{ region.code }})</span>
+      </li>
+      }
+    </ul>
+    } @else if(regionNameSignal() && autoCompleteRegions().length === 0) {
+    <div class="no-results" [class.active]="displayRegionList()">
+      <p>Aucune région ne correspond à votre recherche</p>
+    </div>
+    }
+  </div>
+
+
+  @if(departmentList().length > 0) {
+  <div class="card inner-card">
+    <div class="card-header">
+      <h2>Choisissez un département</h2>
+    </div>
+    @if($departmentResource.isLoading()) {
+    <div class="loader-container">
+      <p>Chargement des départements...</p>
+      <img src="/assets/images/loader.svg" class="loader" alt="Chargement de la liste des départements" />
+    </div>
+    } @else if($departmentResource.error()) {
+    <div class="error-container">
+      <p>Erreur lors du chargement des départements</p>
+      <button type="button" (click)="retryLoadingDepartments()" class="retry-button">
+        Réessayer
+      </button>
+    </div>
+    } @else if($departmentResource.hasValue()) {
+    @if(departmentList().length > 0) {
+    <ul class="list__container" data-test-id="department-list-container">
+      @for(department of departmentList(); track department.code) {
+      <li class="list__item">
+        <a class="list__label" [routerLink]="[department.code]">{{ department.nom }} ({{ department.code }})</a>
+      </li>
+      }
+    </ul>
+    } @else {
+    <p>Aucun département trouvé pour cette région.</p>
+    }
+    }
+  </div>
+  }
+</div>

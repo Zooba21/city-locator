@@ -1,0 +1,15 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4994ff"/>
+      <stop offset="10%" stop-color="#00acff"/>
+      <stop offset="20%" stop-color="#00c0f4"/>
+      <stop offset="40%" stop-color="#00d1e4"/>
+      <stop offset="60%" stop-color="#35dbd9"/>
+      <stop offset="70%" stop-color="#2ee1d4"/>
+      <stop offset="80%" stop-color="#2fe6cd"/>
+      <stop offset="100%" stop-color="#37ebc4"/>
+    </linearGradient>
+  </defs>
+  <polygon points="16,2 30,16 16,30 2,16" fill="url(#gradient1)"/>
+</svg>

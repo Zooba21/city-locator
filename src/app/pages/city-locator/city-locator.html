@@ -1,0 +1,66 @@
+<div class="slide-in">
+  @if(department()) {
+  <div class="card-header">
+    <p class="back"><a title="Retour à la recherche" [routerLink]="['../']"><span
+          class="material-icons">arrow_back</span> </a></p>
+    <h1>Liste des villes dans le département {{ department()?.nom }} ({{ department()?.code }})</h1>
+  </div>
+  }
+
+  <div class="card-body">
+
+    <div class="card inner-card">
+      <div class="auto-complete">
+        <div class="auto-complete__auto-complete-input-container">
+          <input type="text" name="city" placeholder="Rechercher une ville" [formControl]="cityName"
+            data-test-id="city-input" />
+          @if(cityName && cityName.value !== '') {
+          <span class="auto-complete__auto-complete-input-icon material-icons" (click)="clearCityName()"
+            (keydown.enter)="clearCityName()" [tabindex]="0">close</span>
+          }
+        </div>
+      </div>
+
+      @if ($citiesResource.isLoading()) {
+      <div class="loader-container">
+        <p>Chargement des villes...</p>
+        <img src="/assets/images/loader.svg" class="loader" alt="Chargement de la liste des villes" />
+      </div>
+      } @else if($citiesResource.hasValue()) {
+      @if(cityListPaginated().length > 0) {
+      <ul class="list__container" data-test-id="city-list-container">
+        @for(city of cityListPaginated(); track city.code) {
+        <li class="list__item">
+          <div class="list__label">
+            <span>{{ city.nom }}</span>&nbsp;
+            <span>({{city.code}})</span>
+          </div>
+        </li>
+        }
+      </ul>
+      }
+
+      @if(maxPage() > 1) {
+      <nav class="pagination__container" data-test-id="city-list-pagination">
+        @if(currentPage() > 1) {
+        <a data-test-id="city-list-pagination-prev" class="pagination__previous"
+          (click)="currentPage.set(currentPage() - 1)" (keydown.enter)="currentPage.set(currentPage() - 1)"
+          (keydown.space)="currentPage.set(currentPage() - 1)" tabindex="0">
+          <span class="material-icons">arrow_back</span>
+        </a>
+        }
+        <span data-test-id="city-list-pagination-current" class="pagination__current">{{ currentPage() }} /
+          {{ maxPage() }}</span>
+        @if(currentPage() < maxPage()) { <a data-test-id="city-list-pagination-next" class="pagination__next"
+          (click)="currentPage.set(currentPage() + 1)" (keydown.enter)="currentPage.set(currentPage() + 1)"
+          (keydown.space)="currentPage.set(currentPage() + 1)" tabindex="0">
+          <span class="material-icons">arrow_forward</span></a>
+          }
+      </nav>
+      }
+      } @else if ($citiesResource.error()) {
+      <p>Aucune ville ne correspond à votre recherche</p>
+      }
+    </div>
+  </div>
+</div>

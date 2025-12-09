@@ -1,0 +1,34 @@
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.router-content {
+  view-transition-name: router-content;
+}
+
+::view-transition-group(router-content) {
+  overflow: hidden;
+}
+
+::view-transition-old(router-content) {
+  animation: slide-out 300ms ease-in-out;
+}
+
+::view-transition-new(router-content) {
+  animation: slide-in 300ms ease-in-out;
+}
+
